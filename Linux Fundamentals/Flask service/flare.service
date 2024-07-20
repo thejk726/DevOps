@@ -1,0 +1,12 @@
+[Unit]
+Description="Flare server service"
+After=network.target
+
+[Service]
+WorkingDirectory=/usr/local/bin/flare_server
+ExecStart=/usr/local/bin/flare_server/flare
+Restart=on-failure
+User=osboxes
+
+[Install]
+WantedBy=multi-user.target
