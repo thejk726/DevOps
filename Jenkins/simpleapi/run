@@ -1,3 +1,4 @@
 #!/bin/bash 
 
-nohup java -jar target/simpleuserapp.jar &
+
+nohup java -jar $PWD/target/simpleuserapp.jar &
