@@ -1,0 +1,5 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - /home/thejkiranp/Desktop/Devops/Ansible/springapp_setup/roles/mysql_configure

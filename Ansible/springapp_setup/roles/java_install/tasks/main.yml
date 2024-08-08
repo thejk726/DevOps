@@ -1,0 +1,6 @@
+---
+
+- name: Install latest version of java
+  apt:
+    name: openjdk-21-jdk
+    state: latest

@@ -1,0 +1,10 @@
+---
+
+- name: Deploy the spring app on the dev server
+  hosts: localhost
+  connection: local
+  become: yes
+  
+  roles:
+    - app_properties
+    - start

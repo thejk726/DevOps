@@ -1,0 +1,11 @@
+---
+# vars file for roles/app_properties
+
+app_name: "simpleapi"
+app_port: 9010
+server_ip: 10.10.10.121
+db_port: 3306
+db_name: "springdb"
+db_uname: "root"
+db_pass: "password"
+deploy_directory: /root/deployment

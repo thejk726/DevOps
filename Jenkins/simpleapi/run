@@ -1,0 +1,4 @@
+#!/bin/bash 
+
+
+nohup java -jar $PWD/Jenkins/simpleapi/target/simpleuserapp.jar &

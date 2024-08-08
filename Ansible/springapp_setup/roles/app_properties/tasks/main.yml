@@ -1,0 +1,16 @@
+---
+# tasks file for roles/app_properties
+  - name: Ensure config directory exists on remote
+    file:
+      path: "{{ deploy_directory }}"
+      state: directory
+      mode: '0755'
+
+  - name: Generate config file
+    template:
+      src: application.properties.j2
+      dest: "{{ deploy_directory }}/application.properties"
+      mode: '0755'
+
+ 
+
