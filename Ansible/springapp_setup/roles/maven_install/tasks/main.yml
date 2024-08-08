@@ -1,0 +1,6 @@
+---
+
+- name: Install latest vesion of maven
+  apt:
+    name: maven
+    state: latest
