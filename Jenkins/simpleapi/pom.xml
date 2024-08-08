@@ -68,7 +68,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>simpleapi</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
