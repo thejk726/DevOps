@@ -1,0 +1,33 @@
+---
+# tasks file for roles/deploy
+
+- name: Identify jar file
+  find:
+    paths: "{{ local_app_path }}/target"
+    patterns: "*.jar"
+    recurse: no
+  register: app_jar
+
+- name: Ensure deployment directory exists
+  file:
+    path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}"
+    state: directory
+  when: app_jar.matched > 0
+
+- name: Generate spring configuration file in deployment directory
+  template:
+    src: application.properties.j2
+    dest: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties"
+    mode: "0755"
+
+- name: Copy jar file to deployment directory
+  copy:
+    src: "{{ app_jar.files[0].path }}"
+    dest: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }}"
+    
+
+
+- name: Execute the jar file on target
+  shell: >
+         nohup java -jar {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }} --spring.config.location={{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties &
+  when: app_jar.matched > 0
