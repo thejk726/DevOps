@@ -12,7 +12,6 @@
   file:
     path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}"
     state: directory
-  when: app_jar.matched > 0
 
 - name: Generate spring configuration file in deployment directory
   template:
@@ -24,10 +23,37 @@
   copy:
     src: "{{ app_jar.files[0].path }}"
     dest: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }}"
-    
 
+- name: Check if the pidfile for the process already exists
+  stat: 
+    path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
+  register: pid_file
+
+- name: Read the PID of the current process from the PID file
+  slurp:
+    src: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
+  register: app_pid_file
+  when: pid_file.stat.exists
+
+- name: Convert the process id from the pidfile to string
+  set_fact:
+    app_pid: "{{ app_pid_file.content | b64decode | trim }}"
+  when: pid_file.stat.exists
+
+- name: Kill the current instance
+  shell: "kill -9 {{ app_pid }}"
+  when: pid_file.stat.exists and app_pid is defined
+  ignore_errors: yes
+
+- name: Remove old pidfile
+  file:
+    path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
+    state: absent
+  when: pid_file.stat.exists
 
 - name: Execute the jar file on target
   shell: >
          nohup java -jar {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }} --spring.config.location={{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties &
+         echo $! > {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid
   when: app_jar.matched > 0
+

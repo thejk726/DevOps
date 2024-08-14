@@ -1,5 +1,5 @@
 [devserver]
-10.10.10.53 
+172.17.22.126 
 
 [client]
 localhost 
