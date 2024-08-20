@@ -1,0 +1,3 @@
+mysql_memsize: 1G
+ansible_user: deployer
+ansible_private_key_file: "{{ ssh_key_path }}"

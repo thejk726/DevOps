@@ -3,10 +3,11 @@
 
 - name: Identify jar file
   find:
-    paths: "{{ local_app_path }}/target"
+    paths: "{{ role_path }}/files"
     patterns: "*.jar"
     recurse: no
   register: app_jar
+  delegate_to: localhost
 
 - name: Ensure deployment directory exists
   file:
@@ -19,41 +20,33 @@
     dest: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties"
     mode: "0755"
 
+
+
 - name: Copy jar file to deployment directory
   copy:
     src: "{{ app_jar.files[0].path }}"
     dest: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }}"
 
-- name: Check if the pidfile for the process already exists
-  stat: 
-    path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
-  register: pid_file
-
-- name: Read the PID of the current process from the PID file
-  slurp:
-    src: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
-  register: app_pid_file
-  when: pid_file.stat.exists
-
-- name: Convert the process id from the pidfile to string
-  set_fact:
-    app_pid: "{{ app_pid_file.content | b64decode | trim }}"
-  when: pid_file.stat.exists
-
-- name: Kill the current instance
-  shell: "kill -9 {{ app_pid }}"
-  when: pid_file.stat.exists and app_pid is defined
+- name: Check if a .pid file exists in /var/run
+  stat:
+    path: "/var/run/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}.pid"
+  register: pid_file_stat
   ignore_errors: yes
 
-- name: Remove old pidfile
+- name: Kill the process if .pid file exists
+  shell: "kill -9 $(cat /var/run/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}.pid)"
+  when: pid_file_stat.stat.exists
+  ignore_errors: yes
+
+- name: Delete the .pid file
   file:
-    path: "{{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid"
+    path: "/var/run/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}.pid"
     state: absent
-  when: pid_file.stat.exists
+  when: pid_file_stat.stat.exists
+  ignore_errors: yes
 
 - name: Execute the jar file on target
   shell: >
-         nohup java -jar {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }} --spring.config.location={{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties &
-         echo $! > {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_name }}.pid
+    nohup java -jar {{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/{{ app_jar.files[0].path | basename }} --spring.config.location={{ deployment_directory }}/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}/application.properties &
+    echo $! > /var/run/{{ app_jar.files[0].path | basename | regex_replace('(.jar)$','') }}.pid
   when: app_jar.matched > 0
-
