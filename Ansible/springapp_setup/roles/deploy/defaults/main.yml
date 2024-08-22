@@ -1,2 +1,18 @@
 ---
 # defaults file for roles/deploy
+
+
+# Spring boot configuration variables
+
+local_app_path: /home/thejkiranp/Desktop/Devops
+app_name: "simpleapi"
+app_port: 9010
+db_driver: jdbc:mysql
+db_host: localhost
+db_port: 3306
+
+
+# Deployment variables
+
+deployment_directory: /opt
+

@@ -1,9 +1,12 @@
 ---
 
 - name: Deploy the spring app on the dev server
-  hosts: localhost
-  connection: local
+  hosts: dev
   become: yes
-  
+  become_user: root
+
+  vars_files:
+    - inventory/dev/group_vars/secret.yml
+ 
   roles:
     - deploy

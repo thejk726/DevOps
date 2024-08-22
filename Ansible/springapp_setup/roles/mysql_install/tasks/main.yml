@@ -5,3 +5,26 @@
     state: present
   loop:
     - mysql-server
+
+- name: Configure mysql server
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^innodb_buffer_pool_size'
+    line: "innodb_buffer_pool_size={{ mysql_memsize }}"
+    state: present
+  notify: Restart mysql
+
+- name: Set MySQL auth plugin to mysql_native_password
+  shell: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+
+- name: Reload privileges
+  shell: mysql -u root -e 'FLUSH PRIVILEGES'
+
+- name: Set new MySQL root password
+  mysql_user:
+    login_user: 'root'
+    login_password: ''
+    user: 'root'
+    password: '{{ mysql_root_password }}'
+    state: present
+
