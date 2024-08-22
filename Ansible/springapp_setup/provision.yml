@@ -1,16 +1,13 @@
 ---
 - name: Install and configure MySQL and Java for dev and client servers
-  hosts: all
+  hosts: dev
   become: true
   become_user: root
   vars_files:
-    - ./host_vars/dev_server_1.yml
-    - ./host_vars/dev_server_2.yml
+    - inventory/dev/group_vars/secret.yml
+
   roles:
     - java_install
-    - maven_install
     - python_modules
     - mysql_install
-    - mysql_configure
-#    - remove_mysql
 

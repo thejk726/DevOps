@@ -1,5 +1,0 @@
----
-# vars file for /home/thejkiranp/Desktop/Devops/Ansible/springapp_setup/roles/mysql_configure
-mysql_root_password: "password"
-mysql_admin_user: "dbadmin"
-mysql_admin_password: "sqladmin123"

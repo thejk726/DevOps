@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+   simpleapi-db-mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=springdb
+
+    networks:
+      - spring-network
+
+    volumes:
+      - simpleapi_msqldb:/var/lib/mysql
+
+
+   simpleapi:
+    build: .
+    ports:
+      - "8787:8787"
+
+    environment:
+      - APP_NAME=simpleapi
+      - DB_HOST=simpleapi-db-mysql
+      - DB_PORT=3306
+      - DB_NAME=springdb
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - SERVER_PORT=8787
+
+    networks:
+      - spring-network
+
+    depends_on:
+      - simpleapi-db-mysql
+
+
+networks:
+  spring-network:
+    external: true
+
+volumes:
+  simpleapi_msqldb:
