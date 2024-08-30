@@ -1,0 +1,141 @@
+---
+#Secret for simpleapi
+
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: simpleapi-secret
+  namespace: application
+
+type: Opaque
+data:
+  app-name: c2ltcGxlYXBp
+  db-host: bXlzcWwtc2VydmljZS5kYXRhYmFzZQ==
+  db-name: c3ByaW5nZGI=
+  db-port: MzMwNg==
+  db-username: cm9vdA==
+  db-password: cGFzc3dvcmQ=
+  server-port: ODc4Nw==
+
+
+---
+#Deployment for simpleapi
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: simpleapi-app
+  labels:
+    app: simpleapi
+  namespace: application
+
+spec:
+  selector:
+    matchLabels:
+      app: simpleapi
+
+  replicas: 1
+
+  template:
+    metadata:
+      labels:
+        app: simpleapi
+
+    spec:
+      containers:
+        - name: simpleapi
+          imagePullPolicy: Never
+          image: simpleapi
+          ports:
+            - containerPort: 8787
+
+          env:
+            - name: APP_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: app-name
+
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: db-host
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: db-name
+
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: db-port
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: db-username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: db-password
+
+            - name: SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: simpleapi-secret
+                  key: server-port
+
+---
+#Service for simpleapi
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: simpleapi-service
+  namespace: application
+
+spec:
+  type: NodePort
+  selector:
+      app: simpleapi
+
+  ports:
+    - protocol: TCP
+      port: 1067
+      targetPort: 8787
+      nodePort: 30003
+
+---
+#Ingress for simpleapi
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: simpleapi-ingress
+  namespace: application
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+spec:
+  rules:
+    - host: simpleapi.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: simpleapi-service
+                port:
+                  number: 1067
