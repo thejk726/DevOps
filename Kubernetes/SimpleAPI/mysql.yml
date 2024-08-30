@@ -1,0 +1,130 @@
+---
+
+#MySQL secret
+
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: mysql-secret
+  namespace: database
+
+data:
+  root-password: cGFzc3dvcmQ=
+  db-name: c3ByaW5nZGI=
+
+---
+#Persistent Volume for mysql
+
+apiVersion: v1
+kind: PersistentVolume
+
+metadata:
+  name: mysql-pv
+
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+
+  hostPath:
+    path: /mnt/mysql
+
+---
+#Persistent volume claim for MySQL
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: mysql-pvc
+  namespace: database
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+#MySQL StatefulSet
+
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: mysql-statefulset
+  namespace: database
+  labels:
+    database: mysql
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      database: mysql
+
+  template:
+    metadata:
+      labels:
+        database: mysql
+
+    spec:
+      containers:
+        - name: mysql-simpleapi
+          image: mysql
+          ports:
+            - containerPort: 3306
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: root-password
+
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: db-name
+
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-storage
+
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+
+
+
+---
+#MySQL service
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: mysql-service
+  namespace: database
+
+spec:
+  selector:
+    database: mysql
+
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+
+
