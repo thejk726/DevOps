@@ -29,7 +29,7 @@ spec:
     - ReadWriteOnce
 
   hostPath:
-    path: /mnt/mysql
+    path: /mnt/mysql/var/lib/mysql
 
 ---
 #Persistent volume claim for MySQL
