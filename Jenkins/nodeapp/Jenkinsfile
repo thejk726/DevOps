@@ -5,19 +5,27 @@ node {
         }
         
         stage('Provisioning') {
+            dir('Jenkins/nodeapp'){
             sh 'npm install'
+            }    
         }
         
         stage('Build') {
+            dir('Jenkins/nodeapp'){
             sh 'npm run build || echo "[!] No build step defined..."'
+        }
         }
         
         stage('Test') {
+            dir('nodeapp'){
             sh 'npm test'
+            }   
         }
 
         stage('Deploy to staging') {
+            dir('nodeapp'){
             sh './deploy.sh'
+            }
         }
 
         // Notify success
