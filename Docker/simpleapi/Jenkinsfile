@@ -1,0 +1,12 @@
+node {
+  try {
+    stage('Start containers'){
+      sh 'docker-compose up'
+      sh 'echo "App is now live!"'
+      }
+      }
+  catch(Exception e){
+    currentBuild.status='FAILURE'
+    sh 'echo "Build failed! Please debug and try again."'
+    }
+  }
