@@ -1,6 +1,7 @@
 node {
   try {
     stage('Start containers'){
+      dir('Docker/simpleapi')
       sh 'docker compose up'
       sh 'echo "App is now live!"'
       }
