@@ -1,7 +1,7 @@
 node{
 	try{
 	  stage('Checkout'){
-		git url: git@github.com:thejk726/DevOps.git branch:main
+		git url: git@github.com:thejk726/DevOps.git,branch:main
 		}
 	
 	stage('Provisioning'){
