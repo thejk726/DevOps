@@ -1,7 +1,7 @@
 node {
   try {
     stage('Start containers'){
-      sh 'docker-compose up'
+      sh 'docker compose up'
       sh 'echo "App is now live!"'
       }
       }
