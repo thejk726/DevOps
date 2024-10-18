@@ -1,0 +1,26 @@
+node{
+  def dockerImageTag="test-images/springapp:${env.BUILD_ID}"
+
+  try{
+    
+    stage('Checkout'){
+      checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/thejk726/DevOps.git']], extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'Project/springapp']] ])
+
+    stage('Build'){
+      sh 'mvn clean package'
+      }
+
+    stage('Test'){
+    sh 'mvn test'
+    }
+
+    stage('Package'){
+      archiveArtifacts artifacts: '**/target/app.jar', allowEmptyArchive: true
+      }
+
+    stage('Docker build'){
+      dockerImage=docker.build(dockerImageTag)
+      }
+
+    stage('Docker push'){
+
