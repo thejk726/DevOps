@@ -1,26 +1,25 @@
-node{
-  def dockerImageTag="test-images/springapp:${env.BUILD_ID}"
-
-  try{
-    
-    stage('Checkout'){
-      checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/thejk726/DevOps.git']], extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'Project/springapp']] ])
-
-    stage('Build'){
-      sh 'mvn clean package'
-      }
-
-    stage('Test'){
-    sh 'mvn test'
+node {
+    stage('Git Checkout') {
+        withCredentials([string(credentialsId: 'git-url', variable: 'GIT_URL')]) {
+            checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: GIT_URL]],
+            extensions: [[$class: 'CleanBeforeCheckout']]
+            ])
+        }
     }
 
-    stage('Package'){
-      archiveArtifacts artifacts: '**/target/app.jar', allowEmptyArchive: true
-      }
+    stage('Build') {
+        dir('Project/springapp') {
+            app = docker.build("thejk726/test-images:springapp-${BUILD_ID}")
+        }
+    }
 
-    stage('Docker build'){
-      dockerImage=docker.build(dockerImageTag)
-      }
-
-    stage('Docker push'){
+    stage('Docker push') {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER_NAME', passwordVariable: 'PASSWORD')]) {
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                // Tagging and pushing the image with the correct format
+                app.push()
+            }
+        }
+    }
+}
 
