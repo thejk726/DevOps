@@ -1,0 +1,11 @@
+---
+# tasks file for docker_build
+
+- name: Build the docker image using Dockerfile
+  docker_image:
+    name: "{{ image_name }}"
+    tag: "{{ image_tag }}-{{ lookup('env','BUILD_ID') }}"
+    source: build
+    build:
+      path: "{{ build_directory }}" 
+    state: present

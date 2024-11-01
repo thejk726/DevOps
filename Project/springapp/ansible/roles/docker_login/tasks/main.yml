@@ -1,0 +1,8 @@
+---
+# tasks file for roles/docker_login
+
+- name: Login to Dockerhub
+  docker_login:
+    username: "{{ dockerhub_username }}"
+    password: "{{ dockerhub_password }}"
+    reauthorize: yes

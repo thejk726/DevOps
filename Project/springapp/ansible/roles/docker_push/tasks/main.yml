@@ -1,0 +1,10 @@
+---
+# tasks file for docker_push
+
+- name: Push image to DockerHub registry
+  docker_image:
+    name: "{{ image_name }}"
+    tag: "{{ image_tag }}-{{ lookup('env','BUILD_ID' | default('latest') }}"
+    push: yes
+    source: local
+    state: present

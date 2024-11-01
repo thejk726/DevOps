@@ -1,0 +1,9 @@
+---
+# tasks file for ansible/roles/git_checkout
+
+- name: Checkout git repo
+  git:
+    repo: "{{ git_repo }}"
+    dest: "{{ deploy_directory }}"
+    update: yes
+    version: "{{ git_branch }}"

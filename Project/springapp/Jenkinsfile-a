@@ -1,0 +1,14 @@
+node{
+  try{
+  stage('StageOneByTwo'){
+  dir('${WORKSPACE}/Project/springapp/ansible'){
+  sh """
+  ansible-playbook deploy.yml 
+  """
+  }
+  }
+  }catch(Exception e){
+   echo "Pipeline has failed!"
+   currentBuile.result="FAILURE"
+   }
+   }
