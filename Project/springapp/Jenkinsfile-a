@@ -1,7 +1,7 @@
 node{
   try{
   stage('StageOneByTwo'){
-  dir('${WORKSPACE}/Project/springapp/ansible'){
+  dir('Project/springapp/ansible'){
   sh """
   ansible-playbook deploy.yml 
   """
