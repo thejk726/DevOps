@@ -1,6 +1,14 @@
 node{
   try{
-  stage('StageOneByTwo'){
+  stage('Git Checkout'){
+  withCredentials([string(credentialsId: 'git-url',variable: 'GIT_URL')]){
+    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]], 
+    extensions: [[ $class: CleanBeforeCheckout ]]
+    ])
+}
+}
+
+  stage('Run playbook'){
   dir('Project/springapp/ansible'){
   sh """
   ansible-playbook artifact_upload.yml 
