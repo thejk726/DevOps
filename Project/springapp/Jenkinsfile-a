@@ -3,7 +3,7 @@ node{
   stage('StageOneByTwo'){
   dir('Project/springapp/ansible'){
   sh """
-  ansible-playbook deploy.yml 
+  ansible-playbook artifact_upload.yml 
   """
   }
   }
