@@ -20,7 +20,7 @@ node{
 }
 
   stage('Run playbook'){
-  dir('main/Project/ansible'){
+  dir('main/Project/springapp/ansible'){
   sh """
   ansible-playbook artifact_upload.yml 
   """
