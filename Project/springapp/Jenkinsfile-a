@@ -10,7 +10,7 @@ node{
 
   stage('Git Checkout'){
   withCredentials([string(credentialsId: 'git-url',variable: 'GIT_URL')]){
-    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]], 
+    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]] 
     ])
 }
 }
