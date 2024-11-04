@@ -11,7 +11,7 @@
     - "{{ lookup('env','WORKSPACE') }}/springapp_assets.yml"
 
   roles:
-  - git_checkout
+#  - git_checkout
   - docker_build
   - docker_login
   - docker_push
