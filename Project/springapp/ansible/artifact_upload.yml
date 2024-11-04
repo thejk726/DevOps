@@ -3,9 +3,8 @@
 
 - name: Deploy app on target hosts
   hosts: devservers
-  remote_user: thejkiran
   become: yes
-  become_user: root
+  become_user: thejkiran
 
   vars_files:
     - "{{ lookup('env','WORKSPACE') }}/springapp_assets.yml"
