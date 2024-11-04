@@ -5,14 +5,13 @@ node{
   withCredentials([string(credentialsId: 'assets-repo-token', variable: 'ASSETS_TOKEN')]){
     checkout([$class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: "https://${ASSETS_TOKEN}@github.com/thejk726/secret-assets.git" ]], extensions: [[ $class: 'CleanBeforeCheckout' ]]
     ])
-
+  echo $ASSETS_TOKEN
     }
     }
 
   stage('Git Checkout'){
   withCredentials([string(credentialsId: 'git-url',variable: 'GIT_URL')]){
     checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]], 
-    extensions: [[ $class: 'CleanBeforeCheckout' ]]
     ])
 }
 }
