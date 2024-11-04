@@ -1,2 +1,2 @@
 [devservers]
-dev_server_1 ansible_host=localhost ansible_connection=local
+dev_server_0 ansible_host=localhost ansible_connection=local
