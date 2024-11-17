@@ -20,7 +20,7 @@ node{
 }
 
   stage('SonarQube analysis'){
-  dir('/main/Project/springapp'){
+  dir('${WORKSPACE}/main/Project/springapp'){
   withSonarQubeEnv('sonar-server'){
   sh """
     mvn -version
