@@ -1,0 +1,9 @@
+---
+
+- name: Deploy the app on target host(s)
+  hosts: targets
+  become: yes
+  become_user: deployer
+  roles:
+    - image_pull
+    - container_run

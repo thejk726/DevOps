@@ -1,0 +1,65 @@
+Upgrading control-plane nodes
+
+1. Choose a control-plane node to upgrade first. It must have the /etc/kubernetes/admin.conf file
+
+2. For the first control-plane node:
+	2.1 Determine which version to upgrade to
+	> sudo apt update 
+	  sudo apt-cache madison kubeadm
+	  
+	Breakdown
+	a. sudo apt update: This command updates the local package index on your control plane node, ensuring you’re aware of         the latest versions of software available from your configured repositories.4
+	
+	b. sudo apt-cache madison kubeadm: This lists all available versions of kubeadm in the repositories. It's helpful for        confirming which versions are available for upgrade, which is crucial in ensuring compatibility with your current     Kubernetes version.
+	
+	
+	2.2 Update kubeadm
+	  > sudo apt-mark unhold kubeadm && \ # ------(a)
+	    sudo apt-get update && sudo apt-get install -y kubeadm='1.31.x-*' && \ # ------(b)
+            sudo apt-mark hold kubeadm # ------(c)
+        
+        Breakdown
+        a. sudo apt-mark unhold kubeadm:
+
+	This command removes the "hold" status from kubeadm, which may have been set to prevent the package from being 	         accidentally upgraded or modified. By unholding it, you’re now allowing kubeadm to be updated to a specific version.
+
+	b. sudo apt-get update:
+
+	This updates the package index again to ensure that you’re installing the latest information available from 	         repositories.
+	c. sudo apt-get install -y kubeadm=1.30.0-1.1:
+
+	Here, you’re installing a specific version of kubeadm (in this case, 1.30.0-1.1). Specifying the version ensures         control over the upgrade process, preventing accidental updates to an unsupported or unintended version.
+	
+	d. sudo apt-mark hold kubeadm:
+
+	Once the upgrade is complete, this command places kubeadm back on hold. This ensures that it won’t be automatically 	  upgraded in future apt updates, which is helpful for maintaining a stable Kubernetes setup.
+	
+	2.3 Verify kubeadm upgrade
+	> kubeadm version
+	
+	2.4 Check available versions to upgrade to
+	> kubeadm upgrade plan
+	
+	2.5 Upgrade to a particular version 
+	> kubeadm upgrade apply < version >
+	
+	2.6 Upgrade kubelet and kubectl ( needs to be manually upgraded )
+	> sudo apt-mark unhold kubelet kubectl && \
+	  sudo apt-get update && sudo apt-get install -y kubelet=1.30.0-1.1 kubectl=1.30.0-1.1 && \
+	  sudo apt-mark hold kubelet kubectl
+	  
+	2.7 Restart the kubelet service
+	> sudo systemctl restart kubelet
+	
+3. For the other control-plane nodes
+   
+   Instead of the `kubeadm upgrade apply`, use `kubeadm upgrade node` 
+   
+   3.1 Drain the node of all pods
+   > kubectl drain < node > - removes all pods from the node and reschedule them on another one
+   
+   3.2 
+   
+	  
+	
+        
