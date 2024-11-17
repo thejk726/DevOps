@@ -24,8 +24,8 @@ node{
   sh """
   mvn clean verify sonar:sonar \
   -Dsonar.projectKey=springapp \
-  -Dsonar.host.url=http://172.17.0.2:9000 \
-  -Dsonar.login=${sonar-token}
+  -Dsonar.host.url=${SONAR_HOST_URL} \
+  -Dsonar.login=${SONAR_AUTH_TOKEN}
   """
   }
   }
