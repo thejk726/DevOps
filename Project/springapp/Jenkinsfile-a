@@ -1,4 +1,6 @@
 node{
+  
+
   try{
 
   stage('Assets repo checkout'){
@@ -19,7 +21,10 @@ node{
 }
 }
 
+
+  if(params.ENABLE_CODE_ANALYSIS){
   stage('SonarQube analysis'){
+  if(
   dir("${WORKSPACE}/main/Project/springapp"){
   withSonarQubeEnv('sonar-server'){
   sh """
@@ -34,7 +39,7 @@ node{
   }
   }
   }
-
+  }
   stage('Run playbook'){
   dir('main/Project/springapp/ansible'){
   sh """
