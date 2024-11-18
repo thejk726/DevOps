@@ -26,6 +26,10 @@ node{
     mvn -version
   """
   sh """
+    echo $SONAR_AUTH_TOKEN
+  """
+
+  sh """
   mvn clean verify sonar:sonar \
   -Dsonar.projectKey=springapp \
   -Dsonar.host.url=${SONAR_HOST_URL} \
