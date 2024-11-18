@@ -25,9 +25,6 @@ node{
   sh """
     mvn -version
   """
-  sh """
-    echo $SONAR_AUTH_TOKEN
-  """
 
   sh """
   mvn clean verify sonar:sonar \
