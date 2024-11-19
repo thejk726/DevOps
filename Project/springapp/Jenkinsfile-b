@@ -21,6 +21,11 @@ node{
 }
 }
 
+  stage('Archive artifacts'){
+  dir("${WORKSPACE}/main/project/springapp"){
+  archiveArtifacts artifacts: 'pom.xml', fingerprint: true
+  }
+  }
 
   stage('SonarQube analysis'){
   if(params.ENABLE_CODE_ANALYSIS){
