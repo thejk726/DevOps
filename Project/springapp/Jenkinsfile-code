@@ -1,7 +1,8 @@
 node {
 
 stage('Copy Artifacts'){
-copyArtifacts(projectName: 'project-pipeline', selector: lastSuccessful(), filter: '**/*',target: "${WORKSPACE}")
+copyArtifacts(projectName: 'project-pipeline', selector: lastSuccessful(), filter: '**/*', target: "${WORKSPACE}")
+
 dir("${WORKSPACE}"){
 sh "ls -l"
 }
