@@ -1,0 +1,47 @@
+node{
+  
+
+  try{
+
+  stage('Assets repo checkout'){
+  dir('assets'){
+  withCredentials([string(credentialsId: 'assets-repo-token', variable: 'ASSETS_TOKEN')]){
+    checkout([$class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: "https://${ASSETS_TOKEN}@github.com/thejk726/secret-assets.git" ]], extensions: [[ $class: 'CleanBeforeCheckout' ]]
+    ])
+    }
+    }
+    }
+
+  stage('Git Checkout'){
+  dir('main'){
+  withCredentials([string(credentialsId: 'git-url',variable: 'GIT_URL')]){
+    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]], 
+    ])
+}
+}
+}
+
+
+  stage('SonarQube analysis'){
+  if(params.ENABLE_CODE_ANALYSIS){
+  echo "*************************************** CODE ANALYSIS ACTIVE **********************************************"
+  build job: 'code-analysis', wait: true
+  } else{
+    echo "[!]---------------------------------- CODE ANALYSIS SKIPPED ---------------------------------------------"
+    }
+    }
+  
+  stage('Run playbook'){
+  dir('main/Project/springapp/ansible'){
+  sh """
+  ansible-playbook artifact_upload.yml 
+  """
+  }
+  }
+  }catch(Exception e){
+   echo e
+   echo "Pipeline has failed!"
+   currentBuile.result="FAILURE"
+   }
+   }
+

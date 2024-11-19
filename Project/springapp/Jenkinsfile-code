@@ -1,0 +1,18 @@
+node {
+
+stage('SonarQube analysis'){
+  dir("${WORKSPACE}/main/Project/springapp"){
+  withSonarQubeEnv('sonar-server'){
+  sh """
+    mvn -version
+  """
+  sh """
+  mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=springapp \
+  -Dsonar.host.url=${SONAR_HOST_URL} \
+  -Dsonar.login=${SONAR_AUTH_TOKEN}
+  """
+  }
+  }
+}
+}
