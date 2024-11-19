@@ -15,7 +15,7 @@ node{
   stage('Git Checkout'){
   dir('main'){
   withCredentials([string(credentialsId: 'git-url',variable: 'GIT_URL')]){
-    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]], 
+    checkout([ $class: 'GitSCM', branches: [[ name: '*/main' ]], userRemoteConfigs: [[ url: GIT_URL ]] 
     ])
 }
 }
@@ -29,6 +29,7 @@ node{
   sh """
     mvn -version
   """
+
   sh """
   mvn clean verify sonar:sonar \
   -Dsonar.projectKey=springapp \
