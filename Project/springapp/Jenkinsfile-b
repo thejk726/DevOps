@@ -25,7 +25,7 @@ node{
   stage('SonarQube analysis'){
   if(params.ENABLE_CODE_ANALYSIS){
   echo "*************************************** CODE ANALYSIS ACTIVE **********************************************"
-  build job: 'code-analysis', wait: true
+  build job: 'code-analysis', wait: true, parameters: [string(name: 'PARENT_WORKSPACE', value: env.WORKSPACE)]
   } else{
     echo "[!]---------------------------------- CODE ANALYSIS SKIPPED ---------------------------------------------"
     }
