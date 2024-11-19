@@ -22,23 +22,15 @@ node{
 }
 
 
-  if(params.ENABLE_CODE_ANALYSIS){
   stage('SonarQube analysis'){
-  dir("${WORKSPACE}/main/Project/springapp"){
-  withSonarQubeEnv('sonar-server'){
-  sh """
-    mvn -version
-  """
-  sh """
-  mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=springapp \
-  -Dsonar.host.url=${SONAR_HOST_URL} \
-  -Dsonar.login=${SONAR_AUTH_TOKEN}
-  """
-  }
-  }
-  }
-  }
+  if(params.ENABLE_CODE_ANALYSIS){
+  echo "*************************************** CODE ANALYSIS ACTIVE **********************************************"
+  build job: 'code-analysis', wait: true
+  } else{
+    echo "[!]---------------------------------- CODE ANALYSIS SKIPPED ---------------------------------------------"
+    }
+    }
+  
   stage('Run playbook'){
   dir('main/Project/springapp/ansible'){
   sh """
@@ -52,3 +44,4 @@ node{
    currentBuile.result="FAILURE"
    }
    }
+
