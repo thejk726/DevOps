@@ -1,5 +1,12 @@
 node {
 
+stage('Copy Artifacts'){
+copyArtifacts(projectName: 'sample-project-spring', selector: latestSuccessful())
+dir("${WORKSPACE}"){
+sh "ls -l pom.xml"
+}
+}
+
 stage('SonarQube analysis'){
 try{
   dir("${WORKSPACE}"){
