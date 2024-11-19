@@ -21,11 +21,16 @@ node{
 }
 }
 
+  stage('Archive artifacts'){
+  dir("${WORKSPACE}/main/project/springapp"){
+  archiveArtifacts artifacts: 'pom.xml', fingerprint: true
+  }
+  }
 
   stage('SonarQube analysis'){
   if(params.ENABLE_CODE_ANALYSIS){
   echo "*************************************** CODE ANALYSIS ACTIVE **********************************************"
-  build job: 'code-analysis', wait: true, parameters: [string(name: 'PARENT_WORKSPACE', value: env.WORKSPACE)]
+  build job: 'code-analysis', wait: true
   } else{
     echo "[!]---------------------------------- CODE ANALYSIS SKIPPED ---------------------------------------------"
     }
