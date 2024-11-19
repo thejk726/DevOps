@@ -1,6 +1,7 @@
 node {
 
 stage('SonarQube analysis'){
+try{
   dir("${WORKSPACE}/main/Project/springapp"){
   withSonarQubeEnv('sonar-server'){
   sh """
@@ -14,5 +15,9 @@ stage('SonarQube analysis'){
   """
   }
   }
+}catch(Exception e){
+ echo "Code analysis failed!"
+ echo e
+ currentBuild.result="FAILURE"
 }
 }

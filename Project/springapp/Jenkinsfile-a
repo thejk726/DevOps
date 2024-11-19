@@ -49,6 +49,6 @@ node{
   }catch(Exception e){
    echo e
    echo "Pipeline has failed!"
-   currentBuile.result="FAILURE"
+   currentBuild.result="FAILURE"
    }
    }
