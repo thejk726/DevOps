@@ -1,7 +1,7 @@
 node {
 
 stage('Copy Artifacts'){
-copyArtifacts(projectName: 'sample-project-spring', selector: lastSuccessful())
+copyArtifacts(projectName: 'project-pipeline', selector: lastSuccessful())
 dir("${WORKSPACE}"){
 sh "ls -l pom.xml"
 }
