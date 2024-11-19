@@ -22,7 +22,7 @@ node{
 }
 
   stage('Archive artifacts'){
-  dir("${WORKSPACE}/main/project/springapp"){
+  dir("${WORKSPACE}/main/Project/springapp"){
   archiveArtifacts artifacts: 'pom.xml', fingerprint: true
   }
   }
