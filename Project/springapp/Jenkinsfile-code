@@ -17,7 +17,8 @@ try{
   }
 }catch(Exception e){
  echo "Code analysis failed!"
- echo e
- currentBuild.result="FAILURE"
+ echo "[!] ERROR: {e.toString()}"
+ currentBuild.result='FAILURE'
+}
 }
 }
