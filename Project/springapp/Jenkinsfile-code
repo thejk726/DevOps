@@ -2,8 +2,9 @@ node {
 
 stage('Copy Artifacts'){
 copyArtifacts(projectName: 'project-pipeline', selector: lastSuccessful(), filter: '**/*', target: "${WORKSPACE}")
+
 dir("${WORKSPACE}"){
-sh "ls -l pom.xml"
+sh "ls -l"
 }
 }
 
@@ -24,7 +25,7 @@ try{
   }
 }catch(Exception e){
  echo "Code analysis failed!"
- echo "[!] ERROR: {e.toString()}"
+ echo "[!] ERROR: ${e.toString()}"
  currentBuild.result='FAILURE'
 }
 }
