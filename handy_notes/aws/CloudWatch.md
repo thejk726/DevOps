@@ -34,6 +34,7 @@ All the resources are monitored more frequently. It polls every `1 minute` and o
 ## How CloudWatch works? ##
 
 CloudWatch has complete visibility into AWS resources and applications. 
+
 `Collect` : It collects metrics and logs from from all the resources and applications.
 `Monitor` : Enables visualization of these metrics on CloudWatch dashboard.
 `Act` : If any operational changes are detected, it provides for automated responses to these changes.
