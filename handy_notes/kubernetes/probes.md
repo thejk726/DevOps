@@ -112,7 +112,7 @@ startupProbe:
 
 ```
 
-## Best practises ##
+## Best practices ##
 
 1. The frequency for probe execution should be ideal. Too high a frequency can lead to wastage of compute resources. Too less and the container may be in an unhealthy state for too long.
 
