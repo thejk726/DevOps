@@ -70,3 +70,14 @@ nginx -s reload
   Directives used in the http context are inherited by it's children contexts (Eg: server, upstream, location etc.)
 
 * `server` context defines a virtual server that responds to a request for a domain name, ip address or a unix socket.
+
+* `location` context further defines how a server responds to an http request. 
+
+* 'upstream` context defines a group of backend servers (application servers or web servers), essentially to use in a load balancing use case.
+
+* `stream` context defines how nginx handles `layer 3` or `layer 4` traffic.
+
+### NOTE ###
+
+Nginx reads the configurations included with the `include` directive in alphabetical order.
+Eg: If there are two configuration files in conf.d - default.conf and web.conf, default.conf is read before web.conf.
