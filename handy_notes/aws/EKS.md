@@ -17,6 +17,26 @@ EKS is the AWS managed service for Kubernetes. It offers a managed control plane
 2. **CloudFormation** - AWS Infrastructure as Code (IaC) service.
 3. **Terraform** - Reference: [Terraform EKS Blueprints on GitHub](https://github.com/terraform-aws-modules/terraform-aws-eks).
 
+## Methods to configure EKS worker nodes ##
+### 1. Self managed nodes ###
+* Users must manually provision EC2 instances.
+* All kubernetes worker processes must be installed manually.
+* Updates and security patches are the user's responsibility.
+* Register the node with the control plane.
+
+### 2. Managed node groups ###
+* Automates provisioning and lifecycle management of EC2 nodes.
+* Managed nodes run EKS optimized images.
+* Streamlined way to manage lifecycle of nodes using single AWS/EKS api call that allows create, update and termination of nodes.
+* Every node is going to be part of an autoscaling group managed by EKS.
+
+### 3. Fargate ###
+* Follows a serverless architecture.
+* Fargate will create worker nodes `on demand`. 
+* No need to provision/maintain EC2 servers.
+* Based on container requirements, fargate will automatically select EC2 sizing.
+* Pay as you go model.
+
 ## Tools for EKS
 
 ### 1. **eksctl**
