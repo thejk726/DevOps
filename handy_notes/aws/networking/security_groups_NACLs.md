@@ -72,3 +72,10 @@ NACLs do not filter traffic destined to and from the following -
 * License activation for windows instances.
 * Amazon time sync service.
 * Reserved IP addresses used by default VPC router.
+
+## Associating a security group with a resource ##
+
+1. Select the resource (Eg: EC2 instance).
+2. Go to `Actions >> security >> change security groups`.
+3. In the `Associated security groups` section, select the security group to be associated.
+4. Click `Save` to finish.
