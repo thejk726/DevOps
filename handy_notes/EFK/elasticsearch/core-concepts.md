@@ -73,4 +73,21 @@ Elasticsearch is designed to `scale horizontally`. New nodes can be added withou
 * Balance storage efficiency and performance for moderately accessed nodes
 * Eg: Weekly reports
 
+## Documents ##
+
+* `Documents` are the fundamental units of data that get stored in elasticsearch
+* They are structured in `json` format
+* They are optimized for real-time search
+* `Indexing` is the process of storing the documents in a way that makes them easily searchable
+* When a document is indexed, elasticsearch takes that document and converts them to an `inverted index` which is a data structure optimized for quick full-text searches
+* Documents in elasticsearch have a `schemaless` nature. Though a schema is used to define the structure of the data, it's highly flexible and dynamic. We can start indexing documents without predefining the schema at all and elasticsearch will automatically detect documents and add fields as they appear in the documents. This makes it easy to adapt to changing data structures and rapidly evolving.
+
+* When a log file is stored in elasticsearch as a document, a few extra lines are added to it -
+a. `\_index`: Specifies where the log files are grouped together.
+b. `\_type`: "\_doc"
+c. `\_id`: A unique id for the particular document.
+d. `\_score`: Related to the output of a query you run on elasticsearch where it retrieves the data. Higher the score, higher the confidence in the information retrieved.
+e. `\_source`: Actual log data.
+
+## Inverted index ##
 

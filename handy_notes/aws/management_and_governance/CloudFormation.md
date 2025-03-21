@@ -21,3 +21,12 @@
 4. Cost and time efficiency
    * Faster alternative to mannual provisioning and configuration.
 
+## Defining a stack ##
+
+To spawn resources using CloudFormation, the first step is to create a `stack.yaml` file. The parameters used in this file are as follows -
+
+* `Resources` : Defines all the resources that we want CloudFormation to deploy for us.
+* `<resource-name> : A name for the resource, Eg: my-ec2-instance
+* `Type` : Defines the resource type. Eg: AWS::EC2::instance
+* `Properties` : Configuration properties for the resource. Eg: `ImageId: <string>`
+* `!Ref` keyword is used to refer to a resource/variable defined in the script.
